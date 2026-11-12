@@ -1,15 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { SUBJECTS_DATA, Subject } from "@/lib/data/subjects";
-import { CurriculumModal } from "@/components/ui/CurriculumModal";
-import { ArrowRight, ChevronRight, Terminal, BookOpen } from "lucide-react";
+import { SUBJECTS_DATA } from "@/lib/data/subjects";
+import { CURRICULUM_SUBJECTS_MAP } from "@/lib/data/curriculum";
+import { SubjectInspectorModal } from "@/components/subjects/SubjectInspectorModal";
+import { ArrowRight, ChevronRight } from "lucide-react";
 
 export const ExploreSubjects: React.FC = () => {
   const [selectedSubjectId, setSelectedSubjectId] = useState<string>("os");
-  const [activeCurriculumSubject, setActiveCurriculumSubject] = useState<Subject | null>(null);
+  const [inspectorSubjectId, setInspectorSubjectId] = useState<string | null>(null);
 
-  const activeSubject = SUBJECTS_DATA.find((s) => s.id === selectedSubjectId) || SUBJECTS_DATA[1];
+  const activeSubject = SUBJECTS_DATA.find((s) => s.id === selectedSubjectId) || SUBJECTS_DATA[0];
+  const inspectorCurriculumSubject = inspectorSubjectId
+    ? CURRICULUM_SUBJECTS_MAP[inspectorSubjectId] ?? null
+    : null;
 
   const directoryGroups = [
     {
@@ -41,7 +45,7 @@ export const ExploreSubjects: React.FC = () => {
             </h2>
           </div>
           <p className="text-sm text-zinc-400 font-sans max-w-md leading-relaxed">
-            Every core discipline explored from first principles. Select an area to inspect its foundational mechanisms and syllabus.
+            Every core discipline explored from first principles. Select an area to preview its foundational mechanisms.
           </p>
         </div>
 
@@ -50,7 +54,7 @@ export const ExploreSubjects: React.FC = () => {
           
           {/* Left Column: Structured Editorial Index (5 Cols) */}
           <div className="lg:col-span-5 space-y-8">
-            {directoryGroups.map((group, groupIdx) => (
+            {directoryGroups.map((group) => (
               <div key={group.group} className="space-y-2">
                 <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 pb-1 border-b border-zinc-800/60">
                   {group.group}
@@ -144,8 +148,8 @@ export const ExploreSubjects: React.FC = () => {
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-[11px] text-center">
                     <div className="p-1.5 bg-zinc-900 border border-zinc-800 rounded">[Leaf &lt; 100]</div>
-                    <div className="p-1.5 bg-zinc-900 border border-zinc-800 rounded">[100 &le; Leaf &lt; 500]</div>
-                    <div className="p-1.5 bg-zinc-900 border border-zinc-800 rounded">[Leaf &ge; 500]</div>
+                    <div className="p-1.5 bg-zinc-900 border border-zinc-800 rounded">[100 ≤ Leaf &lt; 500]</div>
+                    <div className="p-1.5 bg-zinc-900 border border-zinc-800 rounded">[Leaf ≥ 500]</div>
                   </div>
                   <div className="text-[10px] text-zinc-500 text-center">
                     High branching factor (100–500 keys/page) keeps tree depth at 3 levels for millions of records
@@ -238,16 +242,16 @@ export const ExploreSubjects: React.FC = () => {
             </div>
 
             {/* Bottom Actions */}
-            <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
+            <div className="pt-4 border-t border-zinc-800 flex items-center justify-between gap-3">
               <span className="text-xs font-mono text-zinc-500">
                 Includes {activeSubject.interviewQuestionsCount} curated interview breakdowns
               </span>
 
               <button
-                onClick={() => setActiveCurriculumSubject(activeSubject)}
+                onClick={() => setInspectorSubjectId(activeSubject.id)}
                 className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-xs font-mono transition-colors flex items-center gap-2"
               >
-                <span>Inspect Syllabus</span>
+                <span>Inspect Subject</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -256,11 +260,11 @@ export const ExploreSubjects: React.FC = () => {
         </div>
       </div>
 
-      {/* Curriculum Modal */}
-      <CurriculumModal
-        subject={activeCurriculumSubject}
-        isOpen={!!activeCurriculumSubject}
-        onClose={() => setActiveCurriculumSubject(null)}
+      {/* Compact Subject Inspector Modal */}
+      <SubjectInspectorModal
+        subject={inspectorCurriculumSubject}
+        isOpen={!!inspectorSubjectId}
+        onClose={() => setInspectorSubjectId(null)}
       />
     </section>
   );
