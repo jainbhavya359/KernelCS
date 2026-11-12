@@ -19,9 +19,9 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "Kernel — Understand Computer Science from First Principles",
+  title: "KernelCS — Understand Computer Science from First Principles",
   description:
-    "The interactive learning & interview preparation platform for software engineers. Master DSA, OS, DBMS, Networks, and System Design through visual simulations and deep first-principles comprehension.",
+    "A first-principles Computer Science learning platform. Understand Operating Systems, Database Internals, Computer Networks, Data Structures, and System Design through interactive laboratories, system schematics, and engineering breakdowns.",
 };
 
 export default function RootLayout({

@@ -27,25 +27,25 @@ export default function Home() {
 
       {/* Main Page Sections */}
       <main className="flex-1 flex flex-col">
-        {/* Hero Section with Interactive Computing Substrate Sandbox */}
+        {/* Hero Section: Editorial Statement & 16-Bit Datapath */}
         <Hero />
 
-        {/* Section C: Explore Major Computer Science Disciplines */}
+        {/* Disciplines: 8 Core Computer Science Areas */}
         <ExploreSubjects />
 
-        {/* Section D: Learn Through Understanding - 3 Functional Live Interactive Demonstrations */}
+        {/* Interactive Laboratory: 5 Technical Demonstrations */}
         <InteractiveDemos />
 
-        {/* Section E: Structured Learning Paths & Roadmaps */}
+        {/* Learning Roadmaps: Progressive Systems Tracks */}
         <LearningPaths />
 
-        {/* Section F: The 5-Stage First-Principles Learning Cycle */}
+        {/* Methodology: 5-Stage First-Principles Process */}
         <LearningCycle />
 
-        {/* Section G: Can You Explain It In An Interview? */}
+        {/* Technical Interview Preparation & Deconstruction */}
         <InterviewPrep />
 
-        {/* Section H: Final Call to Action */}
+        {/* Epilogue & Call to Action */}
         <FinalCta />
       </main>
 

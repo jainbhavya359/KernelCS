@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowRight, Terminal, CheckCircle2, ChevronRight, Zap } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 
 export const LearningPaths: React.FC = () => {
   const [activePhaseIndex, setActivePhaseIndex] = useState<number>(0);
@@ -9,55 +9,61 @@ export const LearningPaths: React.FC = () => {
   const phases = [
     {
       index: "01",
-      title: "Silicon & Representation",
+      title: "Hardware Representation & Memory Addressing",
       duration: "Weeks 1 — 3",
-      tagline: "How physical matter computes mathematical truth",
+      tagline: "Binary representations, pointer offsets, and physical memory alignment rules",
       competencies: [
-        "Transistors, Boolean Logic Gates & Two's Complement",
-        "Stack vs Heap Memory Addressing & Physical Alignment",
-        "Endianness, Bitmasks & Raw Assembly Registers",
+        "Two's complement integer arithmetic and bitwise masking",
+        "Stack vs heap allocation, stack frames, and the RSP/RBP registers",
+        "Physical memory alignment, struct padding, and endianness",
+        "Instruction cycle: fetch, decode, execute, and writeback",
       ],
-      lab: "Interactive Memory Visualizer: Stack Pointer vs Heap Allocation",
-      benchmark: "Explain memory struct alignment and 64-bit padding rules.",
+      lab: "CPU Datapath & Memory Addressing Simulator",
+      benchmark: "Explain 64-bit struct memory alignment rules and calculate struct byte padding.",
     },
     {
       index: "02",
-      title: "Memory & Spacetime",
+      title: "Data Structures & Memory Layout",
       duration: "Weeks 4 — 6",
-      tagline: "Organizing data structures to optimize hardware cache lines",
+      tagline: "Contiguous arrays, cache line locality, and balanced search trees",
       competencies: [
-        "Contiguous Arrays & Amortized Doubling Math",
-        "Hash Tables: Open Addressing vs Separate Chaining",
-        "Balanced Search Trees (AVL, Red-Black) & Tries",
+        "Contiguous array pointer math: base + index * sizeof(T)",
+        "Dynamic array geometric doubling and amortized O(1) mathematical proof",
+        "Hash tables: load factors, separate chaining, and open addressing probing",
+        "Balanced search trees (AVL & Red-Black rotations) and binary heaps",
       ],
-      lab: "Interactive Hash Collision & Tree Balancing Rotation Simulator",
-      benchmark: "Implement an O(1) thread-safe LRU Cache from scratch.",
+      lab: "Dynamic Array Resizing & Amortized Doubling Lab",
+      benchmark: "Prove why geometric doubling yields amortized O(1) appends while fixed increment allocation yields O(n).",
     },
     {
       index: "03",
-      title: "Kernel & Concurrency",
+      title: "Operating Systems & Concurrency",
       duration: "Weeks 7 — 9",
-      tagline: "Multiplexing finite CPU cores and isolating address spaces",
+      tagline: "Process scheduling, virtual memory page tables, and thread synchronization",
       competencies: [
-        "Virtual Memory, Multi-level Page Tables & MMU Translation",
-        "Preemptive CPU Scheduling: CFS Red-Black Trees vs Round Robin",
-        "Thread Synchronization, Mutexes, Spinlocks & Deadlock Conditions",
+        "Dual-mode execution (Ring 0 vs 3), system calls, and trap instructions",
+        "Process states, PCB state saving, and context switch costs",
+        "CPU scheduling: Round Robin quantum sizing vs FCFS convoy effect",
+        "Virtual memory multi-level page tables, TLB hits/misses, and page fault traps",
+        "Synchronization primitives: mutexes, spinlocks, semaphores, and Coffman deadlock conditions",
       ],
-      lab: "Interactive CPU Scheduling Gantt & Virtual Memory Page Walk",
-      benchmark: "Solve the dining philosophers deadlock using Coffman analysis.",
+      lab: "Preemptive CPU Scheduling Gantt & Context Switch Lab",
+      benchmark: "Walk through the hardware and OS execution sequence of a page fault exception.",
     },
     {
       index: "04",
-      title: "Distributed Consensus",
+      title: "Storage Engines & Distributed Systems",
       duration: "Weeks 10 — 12",
-      tagline: "Building resilient systems that survive hardware failure and network partitions",
+      tagline: "B+ Tree page fanout, Write-Ahead Logging, and consistent hashing rings",
       competencies: [
-        "Consistent Hashing with Virtual Nodes",
-        "Storage Engines: B+ Trees vs LSM-Trees & Write-Ahead Logs",
-        "CAP Theorem, Quorum Consensus & Raft Leader Election",
+        "Database storage engines: slotted pages and sequential I/O",
+        "B+ Tree index fanout, node splits, and doubly linked leaf range scans",
+        "ACID guarantees, Write-Ahead Logging (WAL), and ARIES crash recovery",
+        "Consistent hashing with virtual nodes to prevent hot spots",
+        "CAP theorem, quorum reads/writes (R + W > N), and the Raft consensus protocol",
       ],
-      lab: "Interactive Consistent Hash Ring & Raft Log Replication Sandbox",
-      benchmark: "Design a fault-tolerant distributed key-value store.",
+      lab: "Database B+ Tree Indexing & Disk Block Access Lab",
+      benchmark: "Design a fault-tolerant distributed key-value store with bounded key rebalancing upon node failure.",
     },
   ];
 
@@ -71,14 +77,14 @@ export const LearningPaths: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 mb-12 border-b border-zinc-800">
           <div>
             <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-2">
-              Roadmap :: 04 / The Engineering Conduit
+              Roadmap :: 04 / Structured Progressions
             </div>
             <h2 className="text-3xl sm:text-5xl font-serif text-white tracking-tight font-normal">
               From Silicon to Scale
             </h2>
           </div>
           <p className="text-sm text-zinc-400 font-sans max-w-md leading-relaxed">
-            No fragmented tutorials or guesswork. A continuous progression that transforms fundamentals into interview readiness.
+            A structured bottom-up progression. Connect low-level memory addressing to operating system scheduling, storage engines, and distributed systems architecture.
           </p>
         </div>
 
@@ -137,7 +143,7 @@ export const LearningPaths: React.FC = () => {
             {/* Left: Competencies (7 cols) */}
             <div className="lg:col-span-7 space-y-4">
               <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider block">
-                First-Principles Invariants Mastered:
+                Foundational Mechanisms &amp; Invariants:
               </span>
 
               <div className="space-y-2.5">
@@ -173,7 +179,7 @@ export const LearningPaths: React.FC = () => {
                 href="#subjects"
                 className="w-full py-2.5 px-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded text-xs font-mono transition-colors flex items-center justify-between"
               >
-                <span>Explore Phase {currentPhase.index} Curriculum</span>
+                <span>Inspect Subject Modules</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </a>
             </div>

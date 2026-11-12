@@ -21,13 +21,13 @@ export const LearningCycle: React.FC = () => {
       id: "understand",
       step: "01",
       title: "Deconstruct",
-      thesis: "Every software abstraction collapses down to silicon, memory, and clocks.",
+      thesis: "Software abstractions exist to solve concrete hardware and concurrency constraints.",
       explanation:
-        "We never start with syntax or canned definitions. We begin with the physical constraints: why does an array need contiguous RAM? Why does a page fault trigger a CPU hardware interrupt?",
+        "Every concept begins with the problem that motivated it: Why does an array require contiguous RAM? Why does a page fault trigger a CPU hardware exception? When you understand what would fail without the abstraction, you no longer need to memorize its behavior.",
       concreteExample: "Tracing Virtual Memory address translation through the physical MMU hardware.",
       visualSnippet: (
         <div className="p-4 bg-[#080A0E] border border-zinc-800 rounded font-mono text-xs space-y-2">
-          <div className="text-[10px] text-zinc-500 uppercase">Silicon Layer Abstraction</div>
+          <div className="text-[10px] text-zinc-500 uppercase">Hardware Layer Translation</div>
           <div className="flex items-center justify-between text-zinc-300">
             <span>High-Level Code</span>
             <span>→</span>
@@ -43,9 +43,9 @@ export const LearningCycle: React.FC = () => {
       id: "visualize",
       step: "02",
       title: "Visualize",
-      thesis: "Seeing state mutate in real time eliminates the struggle of blind mental simulation.",
+      thesis: "State transitions and data layouts become obvious when you see them mutate over time.",
       explanation:
-        "Static diagrams on whiteboards fail to capture time. We render living data structures and wire protocols where you watch pointers move, packets travel, and queues balance.",
+        "Static code on a whiteboard fails to capture runtime state. We trace data structures, register changes, and wire packets step-by-step so you observe exactly when pointers move, buffers reallocate, and locks acquire.",
       concreteExample: "Watching dynamic array doubling copy 4 elements and update the memory pointer live.",
       visualSnippet: (
         <div className="p-4 bg-[#080A0E] border border-zinc-800 rounded font-mono text-xs space-y-2">
@@ -63,10 +63,10 @@ export const LearningCycle: React.FC = () => {
     {
       id: "experiment",
       step: "03",
-      title: "Mutate",
-      thesis: "You only understand a system when you can deliberately cause it to fail.",
+      title: "Stress-Test",
+      thesis: "Stress-testing edge cases and failure modes reveals why safety invariants exist.",
       explanation:
-        "Tweak parameters to trigger boundary conditions: cause stack overflows, starve long jobs in CPU scheduling, or introduce network packet drops to observe TCP congestion avoidance backoff.",
+        "Deliberately introduce boundary conditions: starve long jobs by altering quantum length in Round Robin, cause race conditions by omitting memory barriers, or drop packets to observe TCP retransmission and exponential backoff.",
       concreteExample: "Changing Round Robin quantum size from 2ms to 20ms and measuring context switch overhead.",
       visualSnippet: (
         <div className="p-4 bg-[#080A0E] border border-zinc-800 rounded font-mono text-xs space-y-2">
@@ -86,10 +86,10 @@ export const LearningCycle: React.FC = () => {
       id: "practice",
       step: "04",
       title: "Implement",
-      thesis: "Writing implementations from scratch cements the mental model into muscle memory.",
+      thesis: "Writing minimal, working implementations from scratch proves genuine comprehension.",
       explanation:
-        "No boilerplate templates. Write code that proves comprehension: build an LRU Cache with a doubly-linked hash map, a thread pool with condition variables, or a B+ Tree node split algorithm.",
-      concreteExample: "Implementing an O(1) thread-safe blocking queue in 40 lines of pure C or Rust.",
+        "Build working implementations from first principles: an O(1) LRU Cache with a doubly-linked hash map, a bounded blocking queue with condition variables, or a B+ Tree node split algorithm.",
+      concreteExample: "Implementing an O(1) thread-safe blocking queue using mutexes and condition variables.",
       visualSnippet: (
         <div className="p-4 bg-[#080A0E] border border-zinc-800 rounded font-mono text-xs space-y-2">
           <div className="text-[10px] text-zinc-500 uppercase">First-Principles Verification</div>
@@ -103,16 +103,16 @@ export const LearningCycle: React.FC = () => {
       id: "explain",
       step: "05",
       title: "Defend",
-      thesis: "Senior interviews test whether you can clearly articulate tradeoffs under pressure.",
+      thesis: "Technical interviews evaluate your ability to reason about tradeoffs under ambiguous constraints.",
       explanation:
-        "Learn the structured 3-step verbal defense: Axiom → Mechanism → Production Tradeoffs. Never get caught reciting memorized buzzwords without defending failure modes.",
+        "Staff engineers don't want recited definitions. They look for structured reasoning: state the physical problem constraints, explain the underlying mechanism, and evaluate trade-offs (latency vs throughput, memory vs CPU, read vs write amplification).",
       concreteExample: "Explaining why a B+ Tree outperforms Hash Tables for range queries using disk seek physics.",
       visualSnippet: (
         <div className="p-4 bg-[#080A0E] border border-zinc-800 rounded font-mono text-xs space-y-2">
           <div className="text-[10px] text-zinc-500 uppercase">Verbal Defense Rubric</div>
-          <div className="text-zinc-300">1. Axiom: &quot;Physical disks read in 4KB/16KB page blocks...&quot;</div>
+          <div className="text-zinc-300">1. Constraint: &quot;Physical disks read in 4KB/16KB page blocks...&quot;</div>
           <div className="text-zinc-300">2. Mechanism: &quot;Fanout of 500 fits in page, tree height is 3...&quot;</div>
-          <div className="text-[10px] text-zinc-500">What Staff Engineers listen for during system design</div>
+          <div className="text-[10px] text-zinc-500">What technical interviewers look for during system design</div>
         </div>
       ),
     },
@@ -128,14 +128,14 @@ export const LearningCycle: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 mb-12 border-b border-zinc-800">
           <div>
             <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-2">
-              Pedagogy :: 05 / The Cognitive Cycle
+              Pedagogy :: 05 / The Learning Process
             </div>
             <h2 className="text-3xl sm:text-5xl font-serif text-white tracking-tight font-normal">
               How Understanding Forms
             </h2>
           </div>
           <p className="text-sm text-zinc-400 font-sans max-w-md leading-relaxed">
-            Rote memorization collapses when interviewers introduce ambiguous edge cases. Our five-stage cycle anchors concepts in hardware reality.
+            Rote memorization collapses when interviewers introduce ambiguous edge cases. Our five-stage process anchors concepts in hardware reality and system trade-offs.
           </p>
         </div>
 
@@ -195,7 +195,7 @@ export const LearningCycle: React.FC = () => {
 
           <div className="pt-6 mt-6 border-t border-zinc-800 flex items-center justify-between text-xs font-mono">
             <span className="text-zinc-500">
-              The cycle repeats across all 8 core disciplines
+              Applied consistently across all core Computer Science disciplines
             </span>
 
             <button

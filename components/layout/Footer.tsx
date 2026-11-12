@@ -18,12 +18,12 @@ export const Footer: React.FC = () => {
             </Link>
 
             <p className="text-xs text-zinc-400 leading-relaxed font-sans max-w-sm">
-              The first-principles computer science studio. Dedicated to teaching how machines, memory, protocols, and distributed systems compute physical truth.
+              The first-principles Computer Science learning platform. Dedicated to explaining how memory, operating systems, storage engines, and network protocols actually work.
             </p>
 
             <div className="text-[11px] font-mono text-zinc-500 flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-              <span>DETERMINISTIC RUNTIME ENGINE :: ONLINE</span>
+              <span>INTERACTIVE LABORATORIES :: ACTIVE</span>
             </div>
           </div>
 
@@ -50,7 +50,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a href="#subjects" className="hover:text-white transition-colors">
-                  Data Structures
+                  Data Structures &amp; Algorithms
                 </a>
               </li>
               <li>
@@ -69,12 +69,22 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-xs font-mono text-zinc-400">
               <li>
                 <a href="#demonstrations" className="hover:text-white transition-colors">
-                  Stack Pointer (RSP)
+                  CPU Datapath Cycle
                 </a>
               </li>
               <li>
                 <a href="#demonstrations" className="hover:text-white transition-colors">
-                  CPU Preemptive Gantt
+                  Dynamic Array Resizing
+                </a>
+              </li>
+              <li>
+                <a href="#demonstrations" className="hover:text-white transition-colors">
+                  CPU Scheduling Gantt
+                </a>
+              </li>
+              <li>
+                <a href="#demonstrations" className="hover:text-white transition-colors">
+                  Database B+ Tree Indexing
                 </a>
               </li>
               <li>
@@ -82,38 +92,38 @@ export const Footer: React.FC = () => {
                   Wire Protocol Flight
                 </a>
               </li>
-              <li>
-                <a href="#demonstrations" className="hover:text-white transition-colors">
-                  B+ Tree Page Fanout
-                </a>
-              </li>
             </ul>
           </div>
 
-          {/* Conduit & Defense */}
+          {/* Roadmaps & Interview Prep */}
           <div>
             <h4 className="text-[11px] font-mono uppercase tracking-widest text-zinc-400 mb-3 font-semibold">
-              Conduit &amp; Defense
+              Roadmaps &amp; Prep
             </h4>
             <ul className="space-y-2 text-xs font-mono text-zinc-400">
               <li>
                 <a href="#roadmaps" className="hover:text-white transition-colors">
-                  Silicon to Scale (12 Wks)
+                  Core CS Systems (12 Wks)
                 </a>
               </li>
               <li>
                 <a href="#roadmaps" className="hover:text-white transition-colors">
-                  SDE Technical Fast-Track
+                  Systems Interview Track
                 </a>
               </li>
               <li>
                 <a href="#interview-prep" className="hover:text-white transition-colors">
-                  URL in Browser Defense
+                  Process State &amp; Context Switch
                 </a>
               </li>
               <li>
                 <a href="#interview-prep" className="hover:text-white transition-colors">
-                  Process vs Thread Rubric
+                  B+ Tree Indexing Tradeoffs
+                </a>
+              </li>
+              <li>
+                <a href="#interview-prep" className="hover:text-white transition-colors">
+                  TCP 3-Way Handshake
                 </a>
               </li>
             </ul>
@@ -123,9 +133,9 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Line */}
         <div className="pt-8 border-t border-zinc-800 text-[11px] font-mono text-zinc-500 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div>© 2026 KernelCS Studio. An inquiry into the mechanics of computation.</div>
+          <div>© 2026 KernelCS. An educational platform for Computer Science systems from first principles.</div>
           <div className="flex items-center gap-4">
-            <span>Press ⌘K to search directory</span>
+            <span>Press ⌘K to search index</span>
             <span>•</span>
             <a href="#hero" className="hover:text-white transition-colors">
               Return to Top ↑

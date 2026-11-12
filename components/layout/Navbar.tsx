@@ -58,7 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch, onOpenAuthModal })
                 href="#roadmaps"
                 className="text-zinc-400 hover:text-white transition-colors"
               >
-                Conduit
+                Roadmaps
               </a>
               <a
                 href="#learning-cycle"
@@ -70,7 +70,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch, onOpenAuthModal })
                 href="#interview-prep"
                 className="text-zinc-400 hover:text-white transition-colors"
               >
-                Verbal Defense
+                Interview Prep
               </a>
             </nav>
           </div>
@@ -142,21 +142,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch, onOpenAuthModal })
             onClick={() => setMobileMenuOpen(false)}
             className="block py-1.5 text-zinc-300 hover:text-white"
           >
-            03 / Engineering Conduit
+            03 / Learning Roadmaps
           </a>
           <a
             href="#learning-cycle"
             onClick={() => setMobileMenuOpen(false)}
             className="block py-1.5 text-zinc-300 hover:text-white"
           >
-            04 / Pedagogical Cycle
+            04 / Learning Methodology
           </a>
           <a
             href="#interview-prep"
             onClick={() => setMobileMenuOpen(false)}
             className="block py-1.5 text-zinc-300 hover:text-white"
           >
-            05 / Verbal Defense
+            05 / Interview Preparation
           </a>
           <div className="pt-3 border-t border-zinc-800 flex items-center justify-between">
             <button

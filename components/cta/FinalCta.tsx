@@ -19,17 +19,17 @@ export const FinalCta: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         
         <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-4">
-          Epilogue :: The First-Principles Commitment
+          Epilogue :: The First-Principles Approach
         </div>
 
-        {/* Editorial Heading without any neon gradient */}
+        {/* Editorial Heading */}
         <h2 className="text-3xl sm:text-5xl font-serif text-white tracking-tight leading-[1.12] font-normal mb-5">
           Stop collecting resources. <br />
           <span className="italic text-amber-200/90">Start understanding Computer Science.</span>
         </h2>
 
         <p className="text-sm sm:text-base text-zinc-400 max-w-xl mx-auto font-sans leading-relaxed mb-8">
-          Build the physical and mathematical intuition that makes you an exceptional engineer. Master hardware, memory, operating systems, and distributed protocols.
+          Develop the foundational intuition that distinguishes exceptional software engineers. Explore hardware datapaths, memory management, operating system kernels, and distributed protocols through transparent, deterministic simulations.
         </p>
 
         {/* Tactile Rectangular Input & Action */}
@@ -60,7 +60,7 @@ export const FinalCta: React.FC = () => {
           )}
 
           <p className="mt-3 text-[11px] text-zinc-500 font-mono">
-            Open-access fundamental labs • Deterministic simulations • Zero marketing spam
+            Open-access interactive laboratories • Deterministic simulations • Zero marketing spam
           </p>
         </div>
 

@@ -122,7 +122,7 @@ export const CurriculumModal: React.FC<CurriculumModalProps> = ({
         {/* Footer */}
         <div className="p-4 border-t border-zinc-800 bg-[#080A0E] flex items-center justify-between text-xs font-mono">
           <span className="text-zinc-500">
-            {subject.interviewQuestionsCount} vetted interview solutions attached
+            {subject.interviewQuestionsCount} curated technical breakdowns attached
           </span>
           <button
             onClick={onClose}

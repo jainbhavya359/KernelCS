@@ -148,7 +148,7 @@ export const ExploreSubjects: React.FC = () => {
                     <div className="p-1.5 bg-zinc-900 border border-zinc-800 rounded">[Leaf &ge; 500]</div>
                   </div>
                   <div className="text-[10px] text-zinc-500 text-center">
-                    Depth of 3 levels indexes 20M+ rows with 1 physical disk read
+                    High branching factor (100–500 keys/page) keeps tree depth at 3 levels for millions of records
                   </div>
                 </div>
               )}
@@ -240,7 +240,7 @@ export const ExploreSubjects: React.FC = () => {
             {/* Bottom Actions */}
             <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
               <span className="text-xs font-mono text-zinc-500">
-                Includes {activeSubject.interviewQuestionsCount} verified interview solutions
+                Includes {activeSubject.interviewQuestionsCount} curated interview breakdowns
               </span>
 
               <button
