@@ -1,0 +1,52 @@
+{
+  "id": "os-topic-1-10",
+  "title": "Topic 1.10 — The Booting Process",
+  "description": "Deconstruct the end-to-end bootstrapping pipeline: electrical power sequencing, reset vectors, BIOS vs UEFI, MBR vs GPT/ESP, multi-stage bootloaders, kernel decompression, start_kernel initialization, initramfs root pivot, PID 1 user-space transition, and the comprehensive read() system call execution trace.",
+  "difficulty": "Foundation",
+  "estimatedHours": 4,
+  "learningObjectives": [
+    "Trace cold boot progression from PSU PWR_OK and CPU reset vector 0xFFFF0 through firmware execution.",
+    "Compare legacy 16-bit BIOS against 64-bit modular UEFI, including Secure Boot cryptographic trust chains.",
+    "Analyze storage partitioning schemes: 512-byte MBR sector structure vs GPT and FAT32 EFI System Partition.",
+    "Dissect the bootloader-to-kernel handoff: memory map passing, mode transitions (real to long mode), and start_kernel().",
+    "Deconstruct the initramfs mechanism: solving storage driver chicken-and-egg dilemmas and root filesystem pivoting.",
+    "Examine PID 1 initialization: orphan reaping, daemon launching, and the transition to user space.",
+    "Trace every hardware and software step of the read() system call (The Module 01 Benchmark)."
+  ],
+  "subtopic": {
+    "id": "os-sub-1-10",
+    "title": "The Booting Process",
+    "description": "Comprehensive systems coverage of The Booting Process from silicon reset to PID 1 user-space runtime.",
+    "difficulty": "Foundation",
+    "keyTakeaways": [
+      "Bootstrapping solves the fundamental dilemma of how to load an operating system without an active OS.",
+      "The x86 CPU powers on in 16-bit Real Mode and executes its first instruction at reset vector 0xFFFF0 in flash ROM.",
+      "UEFI modernizes firmware with 64-bit execution, GPT partitioning (up to 9.4 ZB), parallel driver loading, and Secure Boot.",
+      "Multi-stage bootloaders (GRUB) or UEFI EFI executables bridge bare metal to the OS kernel by loading vmlinuz and initramfs into RAM.",
+      "The kernel executes start_kernel() to initialize IDT, page tables, memory allocators, timers, and spawns PID 1.",
+      "initramfs provides early modular drivers, performs disk decryption, and executes switch_root to the real root disk."
+    ],
+    "concepts": [
+      "The Booting Process",
+      "Power Good Signal",
+      "Reset Vector",
+      "BIOS vs UEFI",
+      "MBR vs GPT / ESP",
+      "Multi-Stage Bootloader",
+      "Kernel Initialization",
+      "initramfs / switch_root",
+      "PID 1 (init / systemd)"
+    ],
+    "detailedExplanation": "Bootstrapping is the foundational sequence through which cold computer hardware brings itself to life. The central architectural challenge of bootstrapping is recursive dependency: the CPU needs an operating system to manage memory, disk, and process execution, but the operating system is a file on a disk that cannot be read without drivers, memory management, and file system logic.\n\nTo break this circular dependency, the computing industry designed a multi-phase relay race, where each phase possesses just enough intelligence to load the next, more capable phase:\n\n1. Hardware & Power: PSU verifies DC voltage rails and asserts PWR_OK. Motherboard chipset de-asserts CPU #RESET.\n2. Firmware & POST: The CPU starts in 16-bit Real Mode at reset vector 0xFFFF0, mapped to motherboard SPI Flash ROM. Firmware runs Power-On Self-Test (POST), initializes DRAM via SPD, enumerates PCIe buses, and initializes display hardware.\n3. Bootloader Selection: Firmware inspects NVRAM boot order to locate bootable media (MBR sector 0x55AA or UEFI FAT32 ESP partition). It transfers control to the bootloader (e.g., GRUB 2 or Windows Boot Manager).\n4. Kernel Staging & Handoff: The bootloader reads the compressed kernel (vmlinuz) and initial ramdisk (initramfs) into RAM, queries the firmware for physical memory maps (e820), configures CPU registers, switches CPU modes, and jumps to the kernel entry point.\n5. Kernel Initialization: Linux start_kernel() configures architecture-specific paging, IDT exception tables, Buddy memory allocators, SLAB caches, process scheduling, and timer interrupts.\n6. Early User Space (initramfs): Kernel mounts in-memory initramfs to load storage/RAID/NVMe drivers and decrypt LUKS partitions, then executes switch_root to mount the permanent on-disk root filesystem.\n7. PID 1 & Runtime: Kernel spawns PID 1 (/sbin/init or systemd), transitions to unprivileged Ring 3, launches system daemons, and spawns login consoles.",
+    "firstPrinciplesStepByStep": [
+      "The Boot Dilemma: An OS cannot load itself from disk without active memory, driver, and filesystem management.",
+      "The Hardware Relay: Bootstrapping is divided into sequential stages of increasing abstraction and capability.",
+      "Phase 1 - Silicon: Power stabilization, #RESET de-assertion, and instruction fetch from flash ROM at 0xFFFF0.",
+      "Phase 2 - Firmware: Hardware verification (POST), memory calibration (SPD), and device bus enumeration.",
+      "Phase 3 - Bootloader: Partition parsing (MBR/GPT), filesystem reading, and staging kernel + initramfs into RAM.",
+      "Phase 4 - Kernel: Transition to protected/long mode, hardware subsystem initialization, and IDT/paging setup.",
+      "Phase 5 - User Space: initramfs root pivoting, spawning PID 1, and dropping privilege from Ring 0 to Ring 3."
+    ],
+    "questionIds": ["os-q-6", "os-q-31", "os-q-33", "os-q-34"]
+  }
+}
