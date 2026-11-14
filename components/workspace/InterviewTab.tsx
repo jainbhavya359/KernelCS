@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import {
   TopicInterviewData,
+  LessonInterviewData,
   InterviewQuestionItem,
   DifficultyLevel,
 } from "@/lib/data/curriculum/types";
@@ -26,7 +27,7 @@ import { InlineText, RichContentRenderer } from "@/components/ui/RichContentRend
 
 interface InterviewTabProps {
   topicTitle: string;
-  interviewData: TopicInterviewData | null;
+  interviewData: TopicInterviewData | LessonInterviewData | null;
   lessonTitle?: string;
 }
 
@@ -175,7 +176,7 @@ export const InterviewTab: React.FC<InterviewTabProps> = ({
               </span>
             </div>
             <ul className="space-y-1.5">
-              {quickExplanation.misconceptions.map((m, i) => (
+              {quickExplanation.misconceptions.map((m: string, i: number) => (
                 <li key={i} className="text-xs text-zinc-300 font-sans leading-relaxed flex items-start gap-2">
                   <span className="text-red-400 flex-shrink-0 mt-0.5">✕</span>
                   <span><InlineText text={m} /></span>
@@ -228,7 +229,7 @@ export const InterviewTab: React.FC<InterviewTabProps> = ({
                 What to Emphasize Aloud While Sketching:
               </div>
               <ul className="space-y-1.5">
-                {visual.keyInsights.map((insight, idx) => (
+                {visual.keyInsights.map((insight: string, idx: number) => (
                   <li key={idx} className="text-xs text-zinc-300 font-sans flex items-start gap-2">
                     <span className="text-amber-400 font-mono text-xs flex-shrink-0 mt-0.5">→</span>
                     <span><InlineText text={insight} /></span>
@@ -255,9 +256,9 @@ export const InterviewTab: React.FC<InterviewTabProps> = ({
         </div>
 
         <div className="space-y-5">
-          {questions.map((q, qIdx) => {
+          {questions.map((q: InterviewQuestionItem, qIdx: number) => {
             const isExpanded = Boolean(expandedQuestions[q.id]);
-            const diffStyle = DIFFICULTY_BADGES[q.difficulty] || DIFFICULTY_BADGES.Intermediate;
+            const diffStyle = (q.difficulty && DIFFICULTY_BADGES[q.difficulty]) || DIFFICULTY_BADGES.Intermediate;
 
             return (
               <div
@@ -358,7 +359,7 @@ export const InterviewTab: React.FC<InterviewTabProps> = ({
                           <span>4. Anticipated Interviewer Follow-Ups &amp; Counter-Defenses</span>
                         </div>
                         <ul className="space-y-2">
-                          {q.followUps.map((f, i) => (
+                          {q.followUps.map((f: string, i: number) => (
                             <li key={i} className="text-xs font-sans text-zinc-300 leading-relaxed pl-2 border-l border-amber-400/40">
                               <RichContentRenderer content={f} />
                             </li>

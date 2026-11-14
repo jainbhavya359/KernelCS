@@ -203,6 +203,21 @@ export interface TopicInterviewData {
   questions: InterviewQuestionItem[];
 }
 
+export interface LessonInterviewData {
+  lessonId: string;
+  topicId?: string;
+  quickExplanation: {
+    whatItIs: string;
+    whyItExists: string;
+    howItWorks: string;
+    criticalMechanism: string;
+    realWorldConnection: string;
+    misconceptions: string[];
+  };
+  visual: TopicInterviewVisual;
+  questions: InterviewQuestionItem[];
+}
+
 export interface CurriculumTopic {
   id: string;
   title: string;
@@ -222,41 +237,6 @@ export interface CurriculumTopic {
   sourceAliases?: string[];
   practiceQuestions?: CurriculumQuestion[];
   interviewData?: TopicInterviewData;
-}
-
-export interface InterviewQuestionItem {
-  id: string;
-  question: string;
-  difficulty: DifficultyLevel;
-  conciseAnswer: string;
-  inDepthExplanation: string;
-  executionTraceOrExample?: string;
-  followUps?: string[];
-  topicId?: string;
-  category?: string;
-}
-
-export interface TopicInterviewVisual {
-  title: string;
-  caption: string;
-  visualType: "svg" | "ascii" | "mermaid" | "component";
-  asciiArt?: string;
-  diagramKey?: string;
-  keyInsights?: string[];
-}
-
-export interface TopicInterviewData {
-  topicId: string;
-  quickExplanation: {
-    whatItIs: string;
-    whyItExists: string;
-    howItWorks: string;
-    criticalMechanism: string;
-    realWorldConnection: string;
-    misconceptions: string[];
-  };
-  visual: TopicInterviewVisual;
-  questions: InterviewQuestionItem[];
 }
 
 export interface CurriculumModule {
