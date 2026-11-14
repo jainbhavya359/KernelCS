@@ -20,6 +20,25 @@ export interface CurriculumQuestion {
   relatedConceptIds?: string[];
 }
 
+export interface NumericalExample {
+  title: string;
+  scenario: string;
+  steps: string[];
+  conclusion: string;
+}
+
+export interface CodeBlock {
+  language: string;
+  code: string;
+  explanation: string;
+}
+
+export interface ArchitecturalDiagram {
+  title: string;
+  asciiArt?: string;
+  caption: string;
+}
+
 export interface CurriculumSubtopic {
   id: string;
   title: string;
@@ -29,6 +48,101 @@ export interface CurriculumSubtopic {
   engineeringContext?: string;
   concepts: string[];
   questions: CurriculumQuestion[];
+  detailedExplanation?: string;
+  firstPrinciplesStepByStep?: string[];
+  numericalExample?: NumericalExample;
+  codeSnippet?: CodeBlock;
+  architectureDiagram?: ArchitecturalDiagram;
+  comparisonTable?: {
+    title: string;
+    headers: string[];
+    rows: string[][];
+  };
+  misconceptions?: string[];
+  realWorldImpact?: string;
+  tradeoffs?: string;
+}
+
+export interface TopicRevision {
+  summary: string;
+  keyFormulasAndRules?: string[];
+  highYieldPoints: string[];
+  commonPitfalls?: string[];
+  comparisonTable?: {
+    title: string;
+    headers: string[];
+    rows: string[][];
+  };
+}
+
+export type LessonSectionType =
+  | "motivation"
+  | "prerequisite"
+  | "intuition"
+  | "definition"
+  | "mechanism"
+  | "example"
+  | "diagram"
+  | "system"
+  | "tradeoffs"
+  | "misconception"
+  | "checkpoint"
+  | "notes";
+
+export interface LessonSection {
+  id?: string;
+  title?: string;
+  type?: LessonSectionType;
+  content: string;
+  codeSnippet?: CodeBlock;
+  architectureDiagram?: ArchitecturalDiagram;
+  numericalExample?: NumericalExample;
+  comparisonTable?: {
+    title: string;
+    headers: string[];
+    rows: string[][];
+  };
+  misconceptions?: string[];
+  keyTakeaways?: string[];
+}
+
+export interface LessonCheckpoint {
+  question: string;
+  answer: string;
+  hint?: string;
+}
+
+export interface CurriculumLesson {
+  id: string;
+  title: string;
+  shortDescription?: string;
+  difficulty: DifficultyLevel;
+  estimatedMinutes?: number;
+  sections?: LessonSection[];
+  concepts?: string[];
+  keyTakeaways?: string[];
+  misconceptions?: string[];
+  numericalExample?: NumericalExample;
+  codeSnippet?: CodeBlock;
+  architectureDiagram?: ArchitecturalDiagram;
+  comparisonTable?: {
+    title: string;
+    headers: string[];
+    rows: string[][];
+  };
+  questions?: CurriculumQuestion[];
+  checkpoints?: LessonCheckpoint[];
+  detailedExplanation?: string;
+  firstPrinciplesStepByStep?: string[];
+  engineeringContext?: string;
+  realWorldImpact?: string;
+  tradeoffs?: string;
+  labRef?: {
+    labId: string;
+    label: string;
+    experimentGoal: string;
+  };
+  sourceAliases?: string[];
 }
 
 export interface CurriculumTopic {
@@ -40,6 +154,14 @@ export interface CurriculumTopic {
   prerequisites?: string[];
   learningObjectives: string[];
   subtopics: CurriculumSubtopic[];
+  lessons?: CurriculumLesson[];
+  revision?: TopicRevision;
+  labRef?: {
+    labId: string;
+    label: string;
+    experimentGoal: string;
+  };
+  sourceAliases?: string[];
 }
 
 export interface CurriculumModule {
@@ -139,6 +261,16 @@ export function adaptCurriculumSubject(cs: CurriculumSubject): SubjectLegacy {
     const allConcepts: string[] = [];
 
     m.topics.forEach((t) => {
+      if (t.lessons && t.lessons.length > 0) {
+        t.lessons.forEach((l) => {
+          if (l.questions) totalQuestions += l.questions.length;
+          if (l.concepts) {
+            l.concepts.forEach((c) => {
+              if (!allConcepts.includes(c)) allConcepts.push(c);
+            });
+          }
+        });
+      }
       t.subtopics.forEach((s) => {
         totalQuestions += s.questions.length;
         s.concepts.forEach((c) => {

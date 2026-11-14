@@ -1,7 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { CurriculumSubject, CurriculumModule, CurriculumTopic } from "@/lib/data/curriculum/types";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import {
+  CurriculumSubject,
+  CurriculumModule,
+  CurriculumTopic,
+  CurriculumLesson,
+} from "@/lib/data/curriculum/types";
 import { WorkspaceSidebar } from "./WorkspaceSidebar";
 import { SubjectOverview } from "./SubjectOverview";
 import { TopicContent } from "./TopicContent";
@@ -16,10 +21,15 @@ interface WorkspaceShellProps {
 export interface SelectedTopic {
   module: CurriculumModule;
   topic: CurriculumTopic;
+  lesson?: CurriculumLesson;
 }
 
 function getStorageKey(subjectId: string) {
   return `kernelcs_last_${subjectId}`;
+}
+
+function getCompletedStorageKey(subjectId: string) {
+  return `kernelcs_completed_${subjectId}`;
 }
 
 export const WorkspaceShell: React.FC<WorkspaceShellProps> = ({ subject }) => {
@@ -28,66 +38,144 @@ export const WorkspaceShell: React.FC<WorkspaceShellProps> = ({ subject }) => {
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false); // mobile drawer
   const [isReturning, setIsReturning] = useState(false);
-  const [lastTopicStored, setLastTopicStored] = useState<{ moduleId: string; topicId: string } | null>(null);
+  const [lastTopicStored, setLastTopicStored] = useState<{
+    moduleId: string;
+    topicId: string;
+    lessonId?: string;
+  } | null>(null);
+  const [completedLessonIds, setCompletedLessonIds] = useState<Set<string>>(() => new Set());
 
-  // On mount: check localStorage for returning student
+  // On mount: check localStorage for returning student and completed lessons
   useEffect(() => {
     try {
       const stored = localStorage.getItem(getStorageKey(subject.id));
       if (stored) {
-        const { moduleId, topicId } = JSON.parse(stored);
-        setLastTopicStored({ moduleId, topicId });
+        const parsed = JSON.parse(stored);
+        setLastTopicStored(parsed);
         setIsReturning(true);
       }
     } catch {
       // ignore
     }
+
+    try {
+      const completedStored = localStorage.getItem(getCompletedStorageKey(subject.id));
+      if (completedStored) {
+        setCompletedLessonIds(new Set(JSON.parse(completedStored)));
+      }
+    } catch {
+      // ignore
+    }
+
     // On narrow screens close right panel by default
     if (typeof window !== "undefined" && window.innerWidth < 1280) {
       setRightPanelOpen(false);
     }
   }, [subject.id]);
 
-  // Persist last visited topic
-  const handleSelectTopic = useCallback((module: CurriculumModule, topic: CurriculumTopic) => {
-    setSelectedTopic({ module, topic });
-    setActiveTab("learn");
-    setSidebarOpen(false);
-    try {
-      localStorage.setItem(
-        getStorageKey(subject.id),
-        JSON.stringify({ moduleId: module.id, topicId: topic.id })
-      );
-    } catch {
-      // ignore
-    }
-  }, [subject.id]);
+  // Persist completed lessons
+  const handleToggleCompleteLesson = useCallback(
+    (lessonId: string) => {
+      setCompletedLessonIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(lessonId)) {
+          next.delete(lessonId);
+        } else {
+          next.add(lessonId);
+        }
+        try {
+          localStorage.setItem(
+            getCompletedStorageKey(subject.id),
+            JSON.stringify(Array.from(next))
+          );
+        } catch {
+          // ignore
+        }
+        return next;
+      });
+    },
+    [subject.id]
+  );
 
-  // Resume from last topic
+  // Persist last visited topic/lesson
+  const handleSelectTopic = useCallback(
+    (
+      module: CurriculumModule,
+      topic: CurriculumTopic,
+      lesson?: CurriculumLesson
+    ) => {
+      const chosenLesson =
+        lesson ??
+        (topic.lessons && topic.lessons.length > 0 ? topic.lessons[0] : undefined);
+
+      setSelectedTopic({ module, topic, lesson: chosenLesson });
+      setActiveTab("learn");
+      setSidebarOpen(false);
+      try {
+        localStorage.setItem(
+          getStorageKey(subject.id),
+          JSON.stringify({
+            moduleId: module.id,
+            topicId: topic.id,
+            lessonId: chosenLesson?.id,
+          })
+        );
+      } catch {
+        // ignore
+      }
+    },
+    [subject.id]
+  );
+
+  // Resume from last topic/lesson
   const handleResume = useCallback(() => {
     if (!lastTopicStored) return;
     for (const mod of subject.modules) {
       if (mod.id === lastTopicStored.moduleId) {
         const topic = mod.topics.find((t) => t.id === lastTopicStored.topicId);
         if (topic) {
-          handleSelectTopic(mod, topic);
+          const lesson =
+            lastTopicStored.lessonId && topic.lessons
+              ? topic.lessons.find((l) => l.id === lastTopicStored.lessonId)
+              : undefined;
+          handleSelectTopic(mod, topic, lesson);
           return;
         }
       }
     }
   }, [lastTopicStored, subject.modules, handleSelectTopic]);
 
-  // Navigate prev/next topic
-  const allTopics: SelectedTopic[] = subject.modules.flatMap((mod) =>
-    mod.topics.map((topic) => ({ module: mod, topic }))
-  );
+  // Flattened navigation units (each lesson is a distinct step; if no lessons, topic is the step)
+  const navUnits: SelectedTopic[] = useMemo(() => {
+    const units: SelectedTopic[] = [];
+    subject.modules.forEach((mod) => {
+      mod.topics.forEach((top) => {
+        if (top.lessons && top.lessons.length > 0) {
+          top.lessons.forEach((les) => {
+            units.push({ module: mod, topic: top, lesson: les });
+          });
+        } else {
+          units.push({ module: mod, topic: top });
+        }
+      });
+    });
+    return units;
+  }, [subject.modules]);
+
   const currentIdx = selectedTopic
-    ? allTopics.findIndex(
-        (t) => t.topic.id === selectedTopic.topic.id
-      )
+    ? navUnits.findIndex((u) => {
+        if (u.lesson && selectedTopic.lesson) {
+          return u.lesson.id === selectedTopic.lesson.id;
+        }
+        return u.topic.id === selectedTopic.topic.id;
+      })
     : -1;
-  const prevTopic = currentIdx > 0 ? allTopics[currentIdx - 1] : null;
-  const nextTopic = currentIdx >= 0 && currentIdx < allTopics.length - 1 ? allTopics[currentIdx + 1] : null;
+
+  const prevTopic = currentIdx > 0 ? navUnits[currentIdx - 1] : null;
+  const nextTopic =
+    currentIdx >= 0 && currentIdx < navUnits.length - 1
+      ? navUnits[currentIdx + 1]
+      : null;
 
   // Last topic info for overview card
   const lastTopicInfo = lastTopicStored
@@ -95,7 +183,13 @@ export const WorkspaceShell: React.FC<WorkspaceShellProps> = ({ subject }) => {
         for (const mod of subject.modules) {
           if (mod.id === lastTopicStored.moduleId) {
             const topic = mod.topics.find((t) => t.id === lastTopicStored.topicId);
-            if (topic) return { module: mod, topic };
+            if (topic) {
+              const lesson =
+                lastTopicStored.lessonId && topic.lessons
+                  ? topic.lessons.find((l) => l.id === lastTopicStored.lessonId)
+                  : undefined;
+              return { module: mod, topic, lesson };
+            }
           }
         }
         return null;
@@ -104,7 +198,6 @@ export const WorkspaceShell: React.FC<WorkspaceShellProps> = ({ subject }) => {
 
   return (
     <div className="flex h-[calc(100vh-3rem)] overflow-hidden">
-
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
@@ -128,6 +221,8 @@ export const WorkspaceShell: React.FC<WorkspaceShellProps> = ({ subject }) => {
         <WorkspaceSidebar
           subject={subject}
           selectedTopicId={selectedTopic?.topic.id ?? null}
+          selectedLessonId={selectedTopic?.lesson?.id ?? null}
+          completedLessonIds={completedLessonIds}
           onSelectTopic={handleSelectTopic}
           onCloseMobile={() => setSidebarOpen(false)}
         />
@@ -180,8 +275,8 @@ export const WorkspaceShell: React.FC<WorkspaceShellProps> = ({ subject }) => {
               isReturning={isReturning}
               lastTopicInfo={lastTopicInfo}
               onSelectFirstTopic={() => {
-                const first = allTopics[0];
-                if (first) handleSelectTopic(first.module, first.topic);
+                const first = navUnits[0];
+                if (first) handleSelectTopic(first.module, first.topic, first.lesson);
               }}
               onResume={handleResume}
               onSelectTopic={handleSelectTopic}
@@ -194,6 +289,10 @@ export const WorkspaceShell: React.FC<WorkspaceShellProps> = ({ subject }) => {
               prevTopic={prevTopic}
               nextTopic={nextTopic}
               onNavigate={handleSelectTopic}
+              onToggleCompleteLesson={handleToggleCompleteLesson}
+              isLessonCompleted={Boolean(
+                selectedTopic.lesson && completedLessonIds.has(selectedTopic.lesson.id)
+              )}
             />
           )}
         </div>
@@ -212,4 +311,3 @@ export const WorkspaceShell: React.FC<WorkspaceShellProps> = ({ subject }) => {
     </div>
   );
 };
-

@@ -1,16 +1,21 @@
 "use client";
 
 import React from "react";
-import { CurriculumSubject, CurriculumModule, CurriculumTopic } from "@/lib/data/curriculum/types";
+import {
+  CurriculumSubject,
+  CurriculumModule,
+  CurriculumTopic,
+  CurriculumLesson,
+} from "@/lib/data/curriculum/types";
 import { ArrowRight, BookOpen, FlaskConical, ChevronRight, RotateCcw } from "lucide-react";
 
 interface SubjectOverviewProps {
   subject: CurriculumSubject;
   isReturning: boolean;
-  lastTopicInfo: { module: CurriculumModule; topic: CurriculumTopic } | null;
+  lastTopicInfo: { module: CurriculumModule; topic: CurriculumTopic; lesson?: CurriculumLesson } | null;
   onSelectFirstTopic: () => void;
   onResume: () => void;
-  onSelectTopic: (module: CurriculumModule, topic: CurriculumTopic) => void;
+  onSelectTopic: (module: CurriculumModule, topic: CurriculumTopic, lesson?: CurriculumLesson) => void;
 }
 
 const DIFFICULTY_BADGE: Record<string, string> = {

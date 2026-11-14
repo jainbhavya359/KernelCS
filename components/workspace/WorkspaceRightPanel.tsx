@@ -16,18 +16,20 @@ export const WorkspaceRightPanel: React.FC<WorkspaceRightPanelProps> = ({
   selectedTopic,
   onClose,
 }) => {
-  const { module: mod, topic } = selectedTopic;
+  const { module: mod, topic, lesson } = selectedTopic;
 
-  // Aggregate concepts from all subtopics
-  const concepts = Array.from(
-    new Set(topic.subtopics.flatMap((s) => s.concepts))
-  ).slice(0, 10);
+  // Aggregate concepts from lesson or subtopics
+  const concepts = (lesson?.concepts && lesson.concepts.length > 0)
+    ? lesson.concepts
+    : Array.from(new Set(topic.subtopics.flatMap((s) => s.concepts))).slice(0, 10);
 
   // Prerequisites for this topic
   const prerequisites = topic.prerequisites ?? [];
 
-  // Key takeaways from all subtopics
-  const takeaways = topic.subtopics.flatMap((s) => s.keyTakeaways).slice(0, 6);
+  // Key takeaways from lesson or subtopics
+  const takeaways = (lesson?.keyTakeaways && lesson.keyTakeaways.length > 0)
+    ? lesson.keyTakeaways
+    : topic.subtopics.flatMap((s) => s.keyTakeaways).slice(0, 6);
 
   return (
     <div className="flex flex-col h-full">

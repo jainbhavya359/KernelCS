@@ -62,8 +62,7 @@ const TABS: TabDef[] = [
     id: "revision",
     label: "Revision",
     icon: <Bookmark className="w-3.5 h-3.5" />,
-    available: () => false,
-    disabledLabel: "Coming soon",
+    available: () => true,
   },
 ];
 
