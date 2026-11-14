@@ -6,7 +6,11 @@ export type QuestionType =
   | "Analytical" 
   | "Interview" 
   | "FollowUp" 
-  | "Practical";
+  | "Practical"
+  | "Numerical"
+  | "Scenario";
+
+export type QuestionInteractionType = "mcq" | "numerical" | "short-answer" | "scenario";
 
 export interface CurriculumQuestion {
   id: string;
@@ -18,6 +22,23 @@ export interface CurriculumQuestion {
   expectedOutcome?: string;
   codeSnippet?: string;
   relatedConceptIds?: string[];
+  // Interactive practice extensions:
+  interactionType?: QuestionInteractionType;
+  category?: "Conceptual" | "Application-based" | "Analytical" | "Numerical" | "Scenario-based";
+  options?: string[];
+  correctOptionIndex?: number;
+  correctAnswer?: string;
+  numericalAnswer?: {
+    value: number;
+    unit?: string;
+    tolerance?: number;
+    formula?: string;
+    solutionSteps?: string[];
+  };
+  scenario?: string;
+  stepByStepSolution?: string[];
+  topicId?: string;
+  lessonId?: string;
 }
 
 export interface NumericalExample {
@@ -143,6 +164,43 @@ export interface CurriculumLesson {
     experimentGoal: string;
   };
   sourceAliases?: string[];
+  practiceQuestions?: CurriculumQuestion[];
+  interviewData?: TopicInterviewData;
+}
+
+export interface InterviewQuestionItem {
+  id: string;
+  question: string;
+  difficulty: DifficultyLevel;
+  conciseAnswer: string;
+  inDepthExplanation: string;
+  executionTraceOrExample?: string;
+  followUps?: string[];
+  topicId?: string;
+  category?: string;
+}
+
+export interface TopicInterviewVisual {
+  title: string;
+  caption: string;
+  visualType: "svg" | "ascii" | "mermaid" | "component";
+  asciiArt?: string;
+  diagramKey?: string;
+  keyInsights?: string[];
+}
+
+export interface TopicInterviewData {
+  topicId: string;
+  quickExplanation: {
+    whatItIs: string;
+    whyItExists: string;
+    howItWorks: string;
+    criticalMechanism: string;
+    realWorldConnection: string;
+    misconceptions: string[];
+  };
+  visual: TopicInterviewVisual;
+  questions: InterviewQuestionItem[];
 }
 
 export interface CurriculumTopic {
@@ -162,6 +220,43 @@ export interface CurriculumTopic {
     experimentGoal: string;
   };
   sourceAliases?: string[];
+  practiceQuestions?: CurriculumQuestion[];
+  interviewData?: TopicInterviewData;
+}
+
+export interface InterviewQuestionItem {
+  id: string;
+  question: string;
+  difficulty: DifficultyLevel;
+  conciseAnswer: string;
+  inDepthExplanation: string;
+  executionTraceOrExample?: string;
+  followUps?: string[];
+  topicId?: string;
+  category?: string;
+}
+
+export interface TopicInterviewVisual {
+  title: string;
+  caption: string;
+  visualType: "svg" | "ascii" | "mermaid" | "component";
+  asciiArt?: string;
+  diagramKey?: string;
+  keyInsights?: string[];
+}
+
+export interface TopicInterviewData {
+  topicId: string;
+  quickExplanation: {
+    whatItIs: string;
+    whyItExists: string;
+    howItWorks: string;
+    criticalMechanism: string;
+    realWorldConnection: string;
+    misconceptions: string[];
+  };
+  visual: TopicInterviewVisual;
+  questions: InterviewQuestionItem[];
 }
 
 export interface CurriculumModule {

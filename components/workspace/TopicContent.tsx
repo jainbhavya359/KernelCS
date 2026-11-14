@@ -30,6 +30,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { idToSlug } from "@/lib/data/subjectSlugs";
+import { RichContentRenderer } from "@/components/ui/RichContentRenderer";
+import { PracticeTab } from "./PracticeTab";
+import { InterviewTab } from "./InterviewTab";
+import { getPracticeQuestionsForTopic } from "@/lib/data/curriculum/osModules/practiceBank";
+import { getInterviewDataForTopic } from "@/lib/data/curriculum/osModules/interviewBank";
 
 interface TopicContentProps {
   subject: CurriculumSubject;
@@ -92,9 +97,9 @@ function QuestionItem({ q }: { q: CurriculumQuestion }) {
             <div className="text-[10px] font-mono text-amber-400 uppercase tracking-wider mb-2">
               First-Principles Explanation &amp; Solution:
             </div>
-            <p className="text-sm text-zinc-300 font-sans leading-relaxed whitespace-pre-line">
-              {q.explanation}
-            </p>
+            <div className="text-sm text-zinc-300 font-sans leading-relaxed">
+              <RichContentRenderer content={q.explanation} />
+            </div>
           </div>
 
           {q.codeSnippet && (
@@ -148,8 +153,8 @@ function SubtopicSection({ sub }: { sub: CurriculumSubtopic }) {
 
       {/* Detailed Technical Explanation (if present) */}
       {sub.detailedExplanation && (
-        <div className="text-sm text-zinc-300 font-sans leading-relaxed space-y-3 whitespace-pre-line bg-[#080B10] p-4 rounded-md border border-zinc-800/70">
-          {sub.detailedExplanation}
+        <div className="text-sm text-zinc-300 font-sans leading-relaxed space-y-3 bg-[#080B10] p-4 rounded-md border border-zinc-800/70">
+          <RichContentRenderer content={sub.detailedExplanation} />
         </div>
       )}
 
@@ -373,8 +378,8 @@ function CheckpointItem({ cp }: { cp: LessonCheckpoint }) {
       )}
 
       {revealed && (
-        <div className="pt-3 border-t border-zinc-800/80 text-xs sm:text-sm text-zinc-300 font-sans leading-relaxed whitespace-pre-line bg-[#06080D] p-3 rounded">
-          {cp.answer}
+        <div className="pt-3 border-t border-zinc-800/80 text-xs sm:text-sm text-zinc-300 font-sans leading-relaxed bg-[#06080D] p-3 rounded">
+          <RichContentRenderer content={cp.answer} />
         </div>
       )}
     </div>
@@ -418,8 +423,8 @@ function LessonSectionRenderer({ sec }: { sec: LessonSection }) {
       )}
 
       {sec.content && (
-        <div className="text-sm text-zinc-300 font-sans leading-relaxed whitespace-pre-line space-y-3">
-          {sec.content}
+        <div className="text-sm text-zinc-300 font-sans leading-relaxed space-y-3">
+          <RichContentRenderer content={sec.content} />
         </div>
       )}
 
@@ -650,8 +655,8 @@ function LessonView({
         <div className="space-y-10">
           {/* Detailed Explanation / Narrative */}
           {lesson.detailedExplanation && (
-            <div className="text-sm text-zinc-300 font-sans leading-relaxed whitespace-pre-line space-y-4">
-              {lesson.detailedExplanation}
+            <div className="text-sm text-zinc-300 font-sans leading-relaxed space-y-4">
+              <RichContentRenderer content={lesson.detailedExplanation} />
             </div>
           )}
 
@@ -867,52 +872,20 @@ function LessonView({
 
       {/* ── Tab: PRACTICE ── */}
       {activeTab === "practice" && (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-lg font-serif text-white font-normal mb-1">
-              Practice Questions
-            </h2>
-            <p className="text-xs text-zinc-400 font-sans">
-              Test your foundational and problem-solving understanding of {lesson.title}.
-            </p>
-          </div>
-          {practiceQuestions.length > 0 ? (
-            <div className="space-y-4">
-              {practiceQuestions.map((q) => (
-                <QuestionItem key={q.id} q={q} />
-              ))}
-            </div>
-          ) : (
-            <div className="p-6 text-center border border-dashed border-zinc-800 rounded-lg text-xs font-mono text-zinc-600">
-              Practice questions are mapped in the comprehensive exam bank.
-            </div>
-          )}
-        </div>
+        <PracticeTab
+          topicTitle={topic.title}
+          questions={getPracticeQuestionsForTopic(topic.id, lesson.id)}
+          lessonTitle={lesson.title}
+        />
       )}
 
       {/* ── Tab: INTERVIEW ── */}
       {activeTab === "interview" && (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-lg font-serif text-white font-normal mb-1">
-              Interview Questions
-            </h2>
-            <p className="text-xs text-zinc-400 font-sans">
-              High-frequency systems design and kernel architecture interview questions.
-            </p>
-          </div>
-          {interviewQuestions.length > 0 ? (
-            <div className="space-y-4">
-              {interviewQuestions.map((q) => (
-                <QuestionItem key={q.id} q={q} />
-              ))}
-            </div>
-          ) : (
-            <div className="p-6 text-center border border-dashed border-zinc-800 rounded-lg text-xs font-mono text-zinc-600">
-              General systems interview questions available in the top navigation.
-            </div>
-          )}
-        </div>
+        <InterviewTab
+          topicTitle={topic.title}
+          interviewData={getInterviewDataForTopic(topic.id)}
+          lessonTitle={lesson.title}
+        />
       )}
 
       {/* ── Tab: LAB ── */}
@@ -1233,73 +1206,18 @@ export const TopicContent: React.FC<TopicContentProps> = ({
 
       {/* ── Tab: PRACTICE ── */}
       {activeTab === "practice" && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
-            <div className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
-              Practice Questions &amp; Analytical Problems ({allQuestions.length})
-            </div>
-            <span className="text-xs font-mono text-zinc-500">Topic: {topic.title}</span>
-          </div>
-
-          {allQuestions.length === 0 ? (
-            <p className="text-sm text-zinc-500 font-sans py-8 text-center bg-[#0E1117] rounded border border-zinc-800">
-              No practice questions for this topic yet.
-            </p>
-          ) : (
-            <div className="space-y-4">
-              {allQuestions.map((q) => (
-                <QuestionItem key={q.id} q={q} />
-              ))}
-            </div>
-          )}
-        </div>
+        <PracticeTab
+          topicTitle={topic.title}
+          questions={getPracticeQuestionsForTopic(topic.id)}
+        />
       )}
 
       {/* ── Tab: INTERVIEW ── */}
       {activeTab === "interview" && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
-            <div className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
-              Technical Interview Questions &amp; Synthesis
-            </div>
-            <span className="text-xs font-mono text-zinc-500">{topic.title}</span>
-          </div>
-
-          {/* Module benchmark */}
-          {mod.interviewBenchmark && (
-            <div className="p-5 bg-[#0C0F17] border border-amber-400/25 rounded-lg space-y-2">
-              <div className="text-[10px] font-mono text-amber-400 uppercase tracking-wider">
-                Module Core Interview Benchmark:
-              </div>
-              <p className="text-sm font-serif italic text-zinc-100 leading-relaxed">
-                &ldquo;{mod.interviewBenchmark}&rdquo;
-              </p>
-            </div>
-          )}
-
-          {/* Filter for Interview/FollowUp/Analytical type */}
-          {(() => {
-            const iqQuestions = allQuestions.filter(
-              (q) => q.type === "Interview" || q.type === "FollowUp" || q.type === "Analytical"
-            );
-            if (iqQuestions.length === 0) {
-              return (
-                <div className="p-8 text-center bg-[#0E1117] border border-zinc-800 rounded-lg">
-                  <p className="text-sm text-zinc-400 font-sans">
-                    All foundational questions for this topic are available under the Practice tab.
-                  </p>
-                </div>
-              );
-            }
-            return (
-              <div className="space-y-4">
-                {iqQuestions.map((q) => (
-                  <QuestionItem key={q.id} q={q} />
-                ))}
-              </div>
-            );
-          })()}
-        </div>
+        <InterviewTab
+          topicTitle={topic.title}
+          interviewData={getInterviewDataForTopic(topic.id)}
+        />
       )}
 
       {/* ── Tab: REVISION ── */}
